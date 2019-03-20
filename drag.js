@@ -1,7 +1,7 @@
 class Drag {
-    constructor(ele, options) {
+    constructor(ele, fn) {
         this.ele = ele;
-        this.options = options;
+        this.fn = fn;
         this.init();
     }
 
@@ -24,12 +24,12 @@ class Drag {
             }
 
             document.onmouseup = () => {
-                if (this.options && this.options.draggedFunc && typeof this.options.draggedFunc === "function") {
+                if (typeof this.fn === "function") {
                     let obj = {
                         x: ele.style.left.replace(/px/g, "") * 1,
                         y: ele.style.top.replace(/px/g, "") * 1
                     }
-                    this.options.draggedFunc(obj);
+                    this.fn(obj);
                 }
                 document.onmousemove = document.onmouseup = null;//解除事件绑定
             };
@@ -53,12 +53,12 @@ class Drag {
             document.addEventListener("touchmove", moveFn, { passive: false })//解决chrome56+的报错问题
 
             document.ontouchend = () => {
-                if (this.options && this.options.draggedFunc && typeof this.options.draggedFunc === "function") {
+                if (typeof this.fn === "function") {
                     let obj = {
                         x: ele.style.left.replace(/px/g, "") * 1,
                         y: ele.style.top.replace(/px/g, "") * 1
                     }
-                    this.options.draggedFunc(obj);
+                    this.fn(obj);
                 }
                 document.ontouchend = null;//解除事件绑定
                 document.removeEventListener("touchmove", moveFn);
