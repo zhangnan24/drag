@@ -15,16 +15,21 @@ class Drag {
     // pc端 闭包有助于访问mousedown时的变量
     const ele = element;
     ele.onmousedown = (e) => {
-      const disx = e.pageX - ele.offsetLeft;
-      const disy = e.pageY - ele.offsetTop;
+      const deltaX = e.pageX - ele.offsetLeft;
+      const deltaY = e.pageY - ele.offsetTop;
+      const initialX = e.pageX;
+      const initialY = e.pageY;
 
       document.onmousemove = (ev) => {
         ev.preventDefault();// 解决拖动过快突然事件断掉的怪异bug
-        ele.style.left = `${ev.pageX - disx}px`;
-        ele.style.top = `${ev.pageY - disy}px`;
+        ele.style.transform = `translate(${ev.pageX - initialX}px,${ev.pageY - initialY}px)`;
       };
 
-      document.onmouseup = () => {
+      document.onmouseup = (event) => {
+        
+        ele.style.transform = 'translate(0,0)';
+        ele.style.left = `${event.pageX - deltaX}px`;
+        ele.style.top = `${event.pageY - deltaY}px`;
         if (typeof this.fn === 'function') {
           const obj = {
             x: ele.style.left.replace(/px/g, '') * 1,
